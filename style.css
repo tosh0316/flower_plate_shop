@@ -1,0 +1,293 @@
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  /* 色の名前を定義 */
+  --color-bg:    #f8f6f1;/*  */
+  --color-solid: #ECE8E0;/* Frost Beige */
+  --color-text: #5A4433;/* Bark Brown */
+  --color-bar: #D9B8A0;/* Blush Umber */
+  --color-button: #A9C3A6;/* Sprout Green */
+  --color-hover: #a2e4ec;/* Sky Blue */
+
+  --header-height: 3.5rem; /* ヘッダーの高さを変えたらここも合わせておいてください */
+}
+
+header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-button);
+  width: 100%;
+  height: var(--header-height);       /* 例：ヘッダーの高さ */
+  z-index: 100;  
+}
+
+/*ロゴ*/
+header h1 { 
+  font-family: 'Noto serif JP', serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  z-index: 1;
+  padding: 0.5em;
+  margin: 0em;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Yu Gothic', 'Noto Sans JP', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  height: 100%;
+  overflow: hidden; /* ページ全体のスクロールを止める */
+}
+
+h2 { 
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  margin-bottom: 0.3em;
+}
+
+h3 { 
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  margin: 0.1em;
+}
+
+input {width: 90%;}
+#container {
+  display: flex;
+  height: calc(100vh - 3.5rem);
+  left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  top: var(--header-height);
+}
+
+/*canvas { width: 100%; height: 100%; }*/
+/* 左：canvas を full に広げる */
+#canvas-container {
+  flex: 1;  
+  /*width: calc(100% - 300px) !important;*/
+  aspect-ratio:1/1;
+  position: relative;
+  overflow: hidden;  /* canvas will never scroll */
+}
+
+#canvas-container canvas {
+  position: absolute;
+  width: 100%;
+  top: 0; left: 0;
+  display: block;    /* remove inline-block whitespace, etc */
+}
+
+/* 右：スライダー群を縦並びにして固定幅 */
+#controls {
+    margin-top: 3.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;            /* 親 #overlay の上端に揃える */
+    width: 300px;          /* 必要に応じて調整 */
+    padding: 1em;
+    box-sizing: border-box;
+    background: var(--color-bg);
+    opacity: 0.8;
+    pointer-events: auto;
+    position: absolute;
+    overflow-y: auto;    /* ここだけ縦スクロールを許可 */
+    -webkit-overflow-scrolling: touch;  /* 滑らかなスクロール */
+    pointer-events: auto; /* つまみもクリックできるように */
+
+}
+
+#controls-footer {
+  background-color: var(--color-button);
+  padding:1rem;
+  margin:0px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  bottom: 0;                 /* ← ここで下部に貼りつけ */
+  z-index: 100;
+}
+
+/* 価格表示 */
+#controls-footer .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+#controls-footer .tax {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin-left: 0.25rem;
+}
+
+/* ボタン共通 */
+#controls-footer .btn {
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    background: var(--color-hover);
+    color: var(--color-bg);
+    border-radius: 8px;
+}
+
+#container canvas { 
+    position: absolute;
+    width: 100%;
+}
+
+#overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;       /* 下端まで広げる */
+  width: 300px;     /* 右パネルの幅に合わせる */
+}
+
+
+.form-group {
+    margin-bottom: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* label と input/select を左右に並べる */
+.form-group label {
+    font-family: 'Yu Gothic', 'Noto Sans JP', sans-serif;
+    flex: 0 0 auto;
+    margin-right: 0.5em;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+/* スライダーと同じ幅感でセレクトも伸縮 */
+.form-group select {
+  flex: 1 1 auto;
+  padding: 0.3em 0.5em;
+  font-size: 0.9rem;
+  border: 1px solid var(--color-bg);
+  border-radius: 12px;
+  background: var(--color-solid);
+  color: var(--color-text);
+  appearance: none;        /* 矢印はブラウザ標準に */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'5'%20viewBox%3D'0%200%2010%205'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%205l5-5z'%20fill%3D'%23666'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+  background-size: 0.6em auto;
+}
+
+/* select の余白調整（矢印が隠れないように） */
+.form-group select::-ms-expand {
+  display: none;  /* IE のデフォルト矢印を隠す */
+}
+
+.form-input {
+    box-sizing: border-box; 
+    padding: 6px 10px;
+    resize: vertical;  /* ユーザーによる縦方向リサイズだけ許可 */
+    overflow-wrap: break-word;  /* 英単語も中で折り返す */
+    white-space: pre-wrap;      /* 入力した改行を保持して wrap も効かせる */
+    font-size: 0.9rem;
+    border: 1px solid var(--color-bg);
+    border-radius: 12px;
+    background-color: var(--color-solid);
+    color: var(--color-text);
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    background-color: var(--color-bg);
+}
+
+#loader {
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3d3d3d; /* Grey */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    z-index: 2;
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* 共通スタイル */
+.param-section {
+  border: 1px solid var(--color-solid);
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 8px;
+  background: var(--color-solid);
+}
+
+/* summary 部分 */
+.param-summary {
+  list-style: none;           /* ブラウザデフォの三角を消す */
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin: 0;                  /* デフォ余白をリセット */
+  padding: 4px 8px;
+}
+
+/* ▼ の回転アニメーション */
+.param-section[open] .chevron {
+  transform: rotate(180deg);
+}
+.chevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  margin-left: 8px;
+}
+
+/* 折りたたみコンテンツ */
+.param-content {
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+/* summary の前のブラウザデフォルトマーカーを消すため */
+param-summary::-webkit-details-marker {
+  display: none;
+}
+
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0.5em;
+    white-space: nowrap;
+    
+}
+
+.slider-row label {min-width: 3em;}
+
+.slider-row input[type=range] {flex: 1;}
+
+.slider-row span {min-width: 2em;text-align: right;}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

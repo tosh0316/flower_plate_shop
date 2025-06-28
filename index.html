@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="data:;base64,=">
+        <title>RhinoCompute: Curve Input Example</title>
+        <link rel="stylesheet" href="../style.css" />
+
+    </head>
+
+
+
+    <body>
+        <header>
+            <h1>flower plate</h1>
+        </header>
+
+        <div id="loader"></div> 
+
+        <div id="container">
+            <!-- 左側：Canvas を囲む -->
+            <div id="canvas-container"></div>
+
+            <!-- 右側：スライダー群 -->
+            <div id="overlay">
+                <aside id="controls">
+
+                    <!-- プリセット -->
+                    <h2>【基本パターンから選ぶ】</h2>
+                    <div class="form-group">
+                        <label for="shape">お皿の形：</label>
+                        <select id="shape" name="shape">
+                            <option value="torizara">取り皿</option>
+                            <option value="mamezara">豆皿</option>
+                            <option value="oozara">大皿</option>
+                            <option value="curryzara">カレー皿</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="moyou">花の模様：</label>
+                        <select id="moyou" name="moyou">
+                            <option value="cosmos">コスモス</option>
+                            <option value="sakura">サクラ</option>
+                            <option value="himawari">ヒマワリ</option>
+                            <option value="ume">ウメ</option>
+                        </select>
+                    </div>
+
+                    <!-- パラメータ群 -->
+                    <h2>【カスタマイズする】</h2>
+                    <details class="param-section" open>
+                        <summary class="param-summary">
+                            <h3>お皿の形</h3>
+                            <span class="chevron">▼</span>
+                        </summary>
+                        <div class="param-content">
+                            <div class="slider-row">
+                                <label for="param3">直径:</label>
+                                <input type="range" id="param3" name="param3" min="100" max="280" value="190" step="1">
+                                <span id="param3_value">190</span>㎜
+                            </div>
+
+                            <div class="slider-row">
+                                <label for="param4">高さ:</label>
+                                <input type="range" id="param4" name="param4" min="15" max="24" value="23" step="1">
+                                <span id="param4_value">23</span>㎜
+                            </div>
+
+                            <div class="slider-row">
+                                <label for="param1">多角形:</label>
+                                <input type="range" id="param1" name="param1" min="3" max="10" value="5" step="1">
+                                <span id="param1_value">5</span>角
+                            </div>
+
+                            <div class="slider-row">           
+                                <label for="param2">丸み:</label>
+                                <input type="range" id="param2" name="param2" min="0" max="10" value="7" step="0.5">
+                                <span id="param2_value">7</span>%
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- パラメータ群 -->
+                     <details class="param-section" open>
+                        <summary class="param-summary">
+                            <h3>花の模様</h3>
+                            <span class="chevron">▼</span>
+                        </summary>
+                        <div class="param-content">
+                            <div class="slider-row">
+                                <label for="param5">花径:</label>
+                                <input type="range" id="param5" name="param5" min="20" max="100" value="50" step="1">
+                                <span id="param5_value">50</span>%
+                            </div>
+
+                            <div class="slider-row">
+                                <label for="param6">花弁数:</label>
+                                <input type="range" id="param6" name="param6" min="3" max="20" value="5" step="1">
+                                <span id="param6_value">5</span>枚
+                            </div>
+
+                            <div class="slider-row">
+                                <label for="param7">膨らみ:</label>
+                                <input type="range" id="param7" name="param7" min="1" max="100" value="20" step="1">
+                                <span id="param7_value">20</span>%                                       
+                            </div>
+
+                            <div class="slider-row">
+                                <label for="param8">先形状:</label>
+                                <input type="range" id="param8" name="param8" min="1" max="100" value="20" step="1">
+                                <span id="param8_value">20</span>%                                       
+                            </div>
+                        </div>
+                    </details>
+
+
+                    <!-- 木材選択プルダウン -->
+                    <div class="form-group">
+                        <label for="wood">木材の種類：</label>
+                        <select id="wood" name="wood">
+                            <option value="nara">ナラ</option>
+                            <option value="sakura">サクラ</option>
+                            <option value="keyaki">ケヤキ</option>
+                            <option value="kaba">カバ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flower_name" class="form-label">花の名前：</label>
+                        <textarea
+                            type="text"
+                            id="flower_name"
+                            name="flower_name"
+                            class="form-input"
+                            placeholder="花に名前をつけましょう"
+                            rows="1"
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hanakotoba" class="form-label">花言葉：　</label>
+                        <textarea
+                            type="text"
+                            id="hanakotoba"
+                            name="hanakotoba"
+                            class="form-input"
+                            placeholder="どんな想いを込めて花をデザインしましたか？"
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <footer id="controls-footer">
+                        <div class="price">
+                            <span id="priceDisplay">¥0,000</span>
+                            <span class="tax">（税込・送料別）</span>
+                        </div>
+
+                        <button id="loadBtn" class="btn">デザインを読み込む</button>
+                        <button id="saveBtn" class="btn">デザインを保存</button>
+                        <button id="orderBtn" class="btn">注文に進む</button>
+
+                        <!-- loadBtn action -->
+                        <input
+                            type="file"
+                            id="loadInput"
+                            accept="application/json"
+                            style="display: none;"
+                        />
+                    </footer>
+
+
+                    
+
+                </aside>
+
+            </div>
+
+            <!-- Import maps polyfill -->
+            <!-- Remove this when import maps will be widely supported -->
+            <script async src="https://unpkg.com/es-module-shims@1.7.0/dist/es-module-shims.js"></script>
+
+            
+            <script type="importmap">
+                {
+                    "imports": {
+                        "three": "https://unpkg.com/three@0.144.0/build/three.module.js",
+                        "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.144.0/examples/jsm/controls/OrbitControls.js",
+                        "three/examples/jsm/loaders/3DMLoader": "https://unpkg.com/three@0.144.0/examples/jsm/loaders/3DMLoader.js",
+                        "rhino3dm":"https://unpkg.com/rhino3dm@8.0.0-beta/rhino3dm.module.js",
+                        "rhinocompute": "https://www.unpkg.com/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js"
+                    }
+                }
+            </script>
+
+            <script type="module" src="script.js"></script>
+        </div>
+    </body>
+</html>
