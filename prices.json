@@ -1,27 +1,27 @@
 
 {
   "nara": [
-    { "min": 0,   "max": 100, "price": 8000 },
-    { "min": 101, "max": 150, "price": 8000 },
-    { "min": 151, "max": 200, "price": 8000 },
-    { "min": 201, "max": 300, "price": 8000 }
+    { "min": 0,   "max": 100, "price": 8800 },
+    { "min": 101, "max": 150, "price": 8800 },
+    { "min": 151, "max": 200, "price": 8800 },
+    { "min": 201, "max": 300, "price": 8800 }
   ],
   "sakura": [
-    { "min": 0,   "max": 100, "price": 8000 },
-    { "min": 101, "max": 150, "price": 8000 },
-    { "min": 151, "max": 200, "price": 8000 },
-    { "min": 201, "max": 300, "price": 8000 }
+    { "min": 0,   "max": 100, "price": 8800 },
+    { "min": 101, "max": 150, "price": 8800 },
+    { "min": 151, "max": 200, "price": 8800 },
+    { "min": 201, "max": 300, "price": 8800 }
   ],
   "keyaki": [
-    { "min": 0,   "max": 100, "price": 8000 },
-    { "min": 101, "max": 150, "price": 8000 },
-    { "min": 151, "max": 200, "price": 8000 },
-    { "min": 201, "max": 300, "price": 8000 }
+    { "min": 0,   "max": 100, "price": 8800 },
+    { "min": 101, "max": 150, "price": 8800 },
+    { "min": 151, "max": 200, "price": 8800 },
+    { "min": 201, "max": 300, "price": 8800 }
   ],
   "kaba": [
-    { "min": 0,   "max": 100, "price": 8000 },
-    { "min": 101, "max": 150, "price": 8000 },
-    { "min": 151, "max": 200, "price": 8000 },
-    { "min": 201, "max": 300, "price": 8000 }
+    { "min": 0,   "max": 100, "price": 8800 },
+    { "min": 101, "max": 150, "price": 8800 },
+    { "min": 151, "max": 200, "price": 8800 },
+    { "min": 201, "max": 300, "price": 8800 }
   ]
 }
