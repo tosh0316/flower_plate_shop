@@ -1,17 +1,18 @@
 // Import libraries
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader'
-import rhino3dm from 'rhino3dm'
-import { RhinoCompute } from 'rhinocompute'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader' 
+
 
 // reference the definition
-const definitionName = 'flower_plate_sara.gh'
+//const definitionName = 'flower_plate_sara.gh'
 
 // setup input change events
+/*
 const param1_slider = document.getElementById('param1')
 param1_slider.addEventListener('mouseup', onChange, false)
 param1_slider.addEventListener('touchend', onChange, false)
+*/
 
 const param2_slider = document.getElementById('param2')
 param2_slider.addEventListener('mouseup', onChange, false)
@@ -21,6 +22,7 @@ const param3_slider = document.getElementById('param3')
 param3_slider.addEventListener('mouseup', onChange, false)
 param3_slider.addEventListener('touchend', onChange, false)
 
+/*
 const param4_slider = document.getElementById('param4')
 param4_slider.addEventListener('mouseup', onChange, false)
 param4_slider.addEventListener('touchend', onChange, false)
@@ -28,7 +30,7 @@ param4_slider.addEventListener('touchend', onChange, false)
 const param5_slider = document.getElementById('param5')
 param5_slider.addEventListener('mouseup', onChange, false)
 param5_slider.addEventListener('touchend', onChange, false)
-
+*/
 const param6_slider = document.getElementById('param6')
 param6_slider.addEventListener('mouseup', onChange, false)
 param6_slider.addEventListener('touchend', onChange, false)
@@ -36,40 +38,38 @@ param6_slider.addEventListener('touchend', onChange, false)
 const param7_slider = document.getElementById('param7')
 param7_slider.addEventListener('mouseup', onChange, false)
 param7_slider.addEventListener('touchend', onChange, false)
-
+/*
 const param8_slider = document.getElementById('param8')
 param8_slider.addEventListener('mouseup', onChange, false)
 param8_slider.addEventListener('touchend', onChange, false)
-
+*/
 
 
 
 // globals
 let definition, doc
 let scene, camera, renderer
+let plateContainer = new THREE.Group()
 let priceTable = null  
 const priceDisplay = document.getElementById('priceDisplay')
-
-const rhino = await rhino3dm()
-console.log('Loaded rhino3dm.')
-
-RhinoCompute.url = getAuth('RHINO_COMPUTE_URL') // RhinoCompute server url. Use http://localhost:8081/ if debugging locally.
-RhinoCompute.apiKey = getAuth('RHINO_COMPUTE_KEY')  // RhinoCompute server api key. Leave blank if debugging locally.
+const MODEL_DIR = './models/'
 
 // source a .gh / .ghx file in the same directory
-let url = definitionName
-let res = await fetch(url)
-let buffer = await res.arrayBuffer()
-definition = new Uint8Array(buffer)
-let rhinoMeshGroup
+//let url = definitionName
+//let res = await fetch(url)
+//let buffer = await res.arrayBuffer()
+//definition = new Uint8Array(buffer)
+//let rhinoMeshGroup
 
 
 
 init()
-compute()
+
 
 async function compute(){
+  showSpinner(true)
 
+    /*
     let param1 = new RhinoCompute.Grasshopper.DataTree('takaku_n')
     param1.append([0], [param1_slider.valueAsNumber])
     const param1Value = document.getElementById("param1").value
@@ -131,24 +131,137 @@ async function compute(){
     trees.push(param6)
     trees.push(param7)
     trees.push(param8)
-
+    */
     //console.log("Sending to Rhino.Compute:", trees)
 
     // Call RhinoCompute
-    const res = await RhinoCompute.Grasshopper.evaluateDefinition(definition, trees)
+    //const res = await RhinoCompute.Grasshopper.evaluateDefinition(definition, trees)
 
-    console.log("Response from Rhino.Compute:", res)
+    //console.log("Response from Rhino.Compute:", res)
 
-    collectResults(res)
+
+    //collectResults(res)
     updatePrice()
+
+    //load model(RhinoComputeの代わりに、あらかじめ用意しておいたモデルを表示)
+    //loadModel()
+
+    // 処理が終わったので、ローダーを隠す
+    showSpinner(false)
 }
 
-function onChange() {
+function onChange(e) {
 
   // show spinner
   document.getElementById('loader').style.display = 'block';
+  updateValue(e.target.id);
 
-  compute();
+  // 1. パラメータ値の取得
+  // HTMLのinput要素から値を取得
+  const param_d = document.getElementById('param3').value // 例: 直径 (170)
+  const param_a = document.getElementById('param2').value // 例: 形状A (6)
+  const param_n = document.getElementById('param6').value // 例: 花弁数N (5)
+  const param_f = document.getElementById('param7').value // 例: 深さF (40)
+
+  // 2. ファイル名文字列の生成
+  // フォーマット: d170_a6_n5_f40.glb
+  const filename = `d${param_d}_a${param_a}_n${param_n}_f${param_f}.glb`
+  console.log(`Loading GLB: ${filename}`)
+
+  // 3. モデル読み込み関数を呼び出す
+  loadModel(MODEL_DIR + filename)
+
+  // 価格の再計算 (既存のロジック)
+  updatePrice()
+}
+
+// =========================================================================
+// GLBモデル読み込み関数
+// =========================================================================
+
+/**
+ * 指定されたファイルパスのGLBモデルを読み込み、シーンを更新する
+ */
+function loadModel(url) {
+    const loader = new GLTFLoader()
+    scene.add(plateContainer)
+
+    const woodMaterial = new THREE.MeshStandardMaterial({
+      // 木の色を設定。ナラ材などの明るい色を想定
+      color: 0xcdb28b,     // 例: 明るい茶色/ベージュ（ナラ材に近い）
+      
+      // 質感の設定（非金属、ざらつき）
+      roughness: 0.8,      // 表面のざらつき（木材なので高めに）
+      metalness: 0.1       // 金属感（木材なので低めに）
+      // オプション: シャープな陰影のための設定
+      // flatShading: false, // 滑らかな陰影
+    });
+
+    loader.load(
+        url,
+        // 読み込み成功時
+        function (gltf) {
+            // 古いモデルをシーンから削除
+            // 既存のモデルをすべて削除
+            while(plateContainer.children.length > 0){ 
+                const child = plateContainer.children[0]
+                plateContainer.remove(child)
+                // メモリを解放するためにジオメトリとマテリアルを破棄
+                if (child.isMesh) {
+                    child.geometry.dispose()
+                    //child.material.dispose()
+                }
+            }
+
+            // 新しいモデル（シーン全体）を追加
+            const model = gltf.scene
+            
+            // モデルが大きすぎたり小さすぎたりする場合にスケールを調整
+            // 例：Rhinoの単位に合わせてスケールを調整する必要がある場合
+            let scalefactor = 1000
+            model.scale.set(scalefactor, scalefactor, scalefactor) 
+
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true
+                    child.receiveShadow = true
+                    child.material = woodMaterial 
+                }
+            })
+
+            // モデルがカメラの中心に来るように位置を調整
+            const bbox = new THREE.Box3().setFromObject(model)
+            const center = bbox.getCenter(new THREE.Vector3())
+            model.position.sub(center) 
+            model.position.z += center.z
+            
+            // モデルをコンテナに追加
+            plateContainer.add(model)
+
+            // ローダー非表示
+            document.getElementById('loader').style.display = 'none'
+            
+            // カメラを初期位置に戻す
+            //controls.reset()
+
+            console.log('Model loaded successfully.')
+        },
+        // 読み込み中
+        function (xhr) {
+            // 読み込み進捗を表示する処理が必要な場合ここに記述
+            //console.log((xhr.loaded / xhr.total * 100) + '% loaded')
+        },
+        
+        // 読み込み失敗時
+        function (error) {
+            console.error('An error happened during GLB loading:', error)
+            
+            // 読み込みエラー時には、代わりにRhinoComputeを実行するなどの代替手段を検討
+            // ここではエラーメッセージを表示する
+            document.getElementById('loader').style.display = 'none'
+            alert(`モデルの読み込みに失敗しました。\nファイル名: ${url}\nエラー: ${error.message}`)
+        }
+    )
 }
 
 /**
@@ -164,7 +277,7 @@ function collectResults(responseJson) {
       doc.delete()
 
   //console.log(values)
-  doc = new rhino.File3dm()
+  //doc = new rhino.File3dm()
 
   // for each output (RH_OUT:*)...
   for ( let i = 0; i < values.length; i ++ ) {
@@ -174,10 +287,10 @@ function collectResults(responseJson) {
       // ...and for each branch...
       for( let j = 0; j < branch.length; j ++) {
         // ...load rhino geometry into doc
-        const rhinoObject = decodeItem(branch[j])
-        if (rhinoObject !== null) {
-          doc.objects().add(rhinoObject, null)
-        }
+        //const rhinoObject = decodeItem(branch[j])
+        //if (rhinoObject !== null) {
+        //  doc.objects().add(rhinoObject, null)
+        //}
       }
     }
   }
@@ -189,8 +302,8 @@ function collectResults(responseJson) {
   }
 
   // set up loader for converting the results to threejs
-  const loader = new Rhino3dmLoader()
-  loader.setLibraryPath( 'https://unpkg.com/rhino3dm@8.0.0-beta/' )
+  //const loader = new Rhino3dmLoader()
+  //loader.setLibraryPath( 'https://unpkg.com/rhino3dm@8.0.0-beta/' )
 
   //set Material
   //const resMaterial = new THREE.MeshBasicMaterial( {vertexColors: true, wireframe: false} )
@@ -203,6 +316,7 @@ function collectResults(responseJson) {
     metalness: 0.1       // 金属感（非金属なので小さめに）
   })
   
+  /*
   // load rhino doc into three.js scene
   const buffer = new Uint8Array(doc.toByteArray()).buffer
   loader.parse( buffer, 
@@ -218,6 +332,7 @@ function collectResults(responseJson) {
       if (rhinoMeshGroup !== undefined) {
         scene.remove(rhinoMeshGroup)
       }
+    
 
       rhinoMeshGroup = new THREE.Group()
 
@@ -238,12 +353,14 @@ function collectResults(responseJson) {
       showSpinner(false)
     }
   )
+    */
 }
 
 function updateValue(id) {
   const slider = document.getElementById(id)
   const display = document.getElementById(id + '_value')
-  display.textContent = slider.value
+  display.innerText = slider.value
+
 }
 
 /**
@@ -259,6 +376,7 @@ function showSpinner(enable) {
 /**
 * Attempt to decode data tree item to rhino geometry
 */
+/*
 function decodeItem(item) {
   const data = JSON.parse(item.data)
   if (item.type === 'System.String') {
@@ -271,7 +389,9 @@ function decodeItem(item) {
   }
   return null
 }
+*/
 
+/*
 function getAuth( key ) {
   let value = localStorage[key]
   if ( value === undefined ) {
@@ -283,6 +403,7 @@ function getAuth( key ) {
   }
   return value
 }
+*/
 
 // BOILERPLATE //
 
@@ -394,6 +515,44 @@ async function init () {
     guideGroup.add(sprite);
   });
 
+  
+    // モデル読み込み
+  //const loader = new GLTFLoader();
+    // 👇 1. 木材マテリアルの定義
+  
+  //d150_a0_n3_f20.glb
+  //d150_a6_n3_f40.glb
+  /*loader.load('/models/d170_a6_n5_f40.glb', (gltf) => {
+    // モデルの拡大処理
+    const scaleFactor = 1000; 
+    gltf.scene.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    // 👇 2. 向きの修正 (RhinoのZ-upを考慮し、X軸周りに回転して水平にする)
+    // お皿が床に平行になるように、X軸周りに-90度（または90度）回転させます。
+    // GLBファイルの回転設定によりますが、これが一般的な解決策です。
+    ///gltf.scene.rotation.x = Math.PI / 2; // -90度回転 (X軸周り)
+    // 👇 3. モデルのセンタリング (カメラから見て中央に配置する)
+    // プレートの重心を取得して、原点(0, 0, 0)に移動させる。
+    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    // モデルを原点に移動
+    ///gltf.scene.position.x -= center.x;
+    ///gltf.scene.position.y -= center.z;
+    // 👇 5. 全てのメッシュに木材マテリアルを適用
+    gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+            child.material = woodMaterial;
+            // 影を受け取れるように設定（環境光設定済みの前提で）
+            child.receiveShadow = true; 
+            child.castShadow = true;
+        }
+    });
+    scene.add(plateContainer);
+  });
+
+  console.log('model load')
+  */
+
   animate()
 
   //price------------------
@@ -407,6 +566,21 @@ async function init () {
     alert('価格情報が読み込めませんでした。管理者に連絡してください。')
     priceTable = {}  // 安全策として空オブジェクト
   }
+  
+  // 1. パラメータ値の取得
+  // HTMLのinput要素から値を取得
+  const param_d = document.getElementById('param3').value // 例: 直径 (170)
+  const param_a = document.getElementById('param2').value // 例: 形状A (6)
+  const param_n = document.getElementById('param6').value // 例: 花弁数N (5)
+  const param_f = document.getElementById('param7').value // 例: 深さF (40)
+
+  // 2. ファイル名文字列の生成
+  // フォーマット: d170_a6_n5_f40.glb
+  const filename = `d${param_d}_a${param_a}_n${param_n}_f${param_f}.glb`
+  console.log(`Loading GLB: ${filename}`)
+
+  // 3. モデル読み込み関数を呼び出す
+  loadModel(MODEL_DIR + filename)
   // 価格表示エリアがあれば初回更新
   updatePrice()
 
@@ -461,7 +635,7 @@ const loadBtn   = document.getElementById('loadBtn')
 const loadInput = document.getElementById('loadInput')
 
 // ボタンを押すとファイル選択ダイアログを開く
-loadBtn.addEventListener('click', () => loadInput.click())
+//loadBtn.addEventListener('click', () => loadInput.click())
 
 // ファイルが選ばれたら
 loadInput.addEventListener('change', () => {
@@ -535,3 +709,65 @@ function updatePrice() {
   }
 }
 
+
+//注文操作------------------------------------------
+// BASEショップのカートURL
+const BASE_CART_URL = 'https://cotomos.base.shop/shops/cotomos-base-shop/checkout/edit' 
+
+// 注文ボタンの要素を取得
+const orderBtn = document.getElementById('orderBtn')
+
+// イベントリスナーを設定
+orderBtn.addEventListener('click', proceedToOrder)
+
+function getOrderDetails() {
+    // 現在のパラメータ値を取得
+    const d = document.getElementById('param3')?.value || 'N/A'
+    const a = document.getElementById('param2')?.value || 'N/A'
+    const n = document.getElementById('param6')?.value || 'N/A'
+    const f = document.getElementById('param7')?.value || 'N/A'
+    const wood = document.getElementById('wood')?.value || 'N/A'
+    const flowerName = document.getElementById('flower_name')?.value || 'N/A'
+    const hanakotoba = document.getElementById('hanakotoba')?.value || 'N/A'
+
+    // 注文情報を整形
+    const details = 
+`
+--- 注文情報 ---
+直径: ${d}
+丸み: ${a}
+花弁数: ${n}
+膨らみ: ${f}
+木材: ${wood}
+花の名前: ${flowerName}
+花言葉: ${hanakotoba}
+--- 備考欄に貼り付けてください ---
+`
+    return details.trim()
+}
+
+async function proceedToOrder() {
+    const orderDetails = getOrderDetails()
+
+    // 1. クリップボードにコピー
+    try {
+        await navigator.clipboard.writeText(orderDetails)
+        
+        // コピー成功をユーザーに通知
+        alert(
+            '注文情報がクリップボードにコピーされました！\n' +
+            'BASEの「備考欄」に貼り付けてください。\n\n' +
+            '【コピーされた情報】\n' + orderDetails
+        )
+
+        // 2. BASEのカート画面へ遷移
+        window.open(BASE_CART_URL, '_blank')
+
+    } catch (err) {
+        console.error('クリップボードのコピーに失敗しました。', err)
+        alert('注文情報のコピーに失敗しました。手動でメモしてください。')
+        
+        // 遷移だけは行う
+        window.open(BASE_CART_URL, '_blank')
+    }
+}

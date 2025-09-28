@@ -19,6 +19,7 @@
         <div id="loader"></div> 
 
         <div id="container">
+            
             <!-- 左側：Canvas を囲む -->
             <div id="canvas-container"></div>
 
@@ -27,6 +28,7 @@
                 <aside id="controls">
 
                     <!-- プリセット -->
+                    <!-- 
                     <h2>【基本パターンから選ぶ】</h2>
                     <div class="form-group">
                         <label for="shape">お皿の形：</label>
@@ -47,6 +49,7 @@
                             <option value="ume">ウメ</option>
                         </select>
                     </div>
+                    -->
 
                     <!-- パラメータ群 -->
                     <h2>【カスタマイズする】</h2>
@@ -58,26 +61,30 @@
                         <div class="param-content">
                             <div class="slider-row">
                                 <label for="param3">直径:</label>
-                                <input type="range" id="param3" name="param3" min="100" max="280" value="190" step="1">
-                                <span id="param3_value">190</span>㎜
+                                <input type="range" id="param3" name="param3" min="150" max="190" value="170" step="10">
+                                <span id="param3_value">170</span>㎜
                             </div>
 
+                        <!--
                             <div class="slider-row">
                                 <label for="param4">高さ:</label>
                                 <input type="range" id="param4" name="param4" min="15" max="24" value="23" step="1">
                                 <span id="param4_value">23</span>㎜
                             </div>
+                        -->
 
+                        <!--
                             <div class="slider-row">
                                 <label for="param1">多角形:</label>
                                 <input type="range" id="param1" name="param1" min="3" max="10" value="5" step="1">
                                 <span id="param1_value">5</span>角
                             </div>
+                        -->
 
                             <div class="slider-row">           
                                 <label for="param2">丸み:</label>
-                                <input type="range" id="param2" name="param2" min="0" max="10" value="7" step="0.5">
-                                <span id="param2_value">7</span>%
+                                <input type="range" id="param2" name="param2" min="0" max="10" value="6" step="2">
+                                <span id="param2_value">6</span>%
                             </div>
                         </div>
                     </details>
@@ -89,29 +96,34 @@
                             <span class="chevron">▼</span>
                         </summary>
                         <div class="param-content">
+                            
+                        <!--
                             <div class="slider-row">
                                 <label for="param5">花径:</label>
                                 <input type="range" id="param5" name="param5" min="20" max="100" value="50" step="1">
                                 <span id="param5_value">50</span>%
                             </div>
+                        -->
 
                             <div class="slider-row">
                                 <label for="param6">花弁数:</label>
-                                <input type="range" id="param6" name="param6" min="3" max="20" value="5" step="1">
+                                <input type="range" id="param6" name="param6" min="3" max="8" value="5" step="1">
                                 <span id="param6_value">5</span>枚
                             </div>
 
                             <div class="slider-row">
                                 <label for="param7">膨らみ:</label>
-                                <input type="range" id="param7" name="param7" min="1" max="100" value="20" step="1">
+                                <input type="range" id="param7" name="param7" min="20" max="100" value="20" step="20">
                                 <span id="param7_value">20</span>%                                       
                             </div>
 
+                        <!--   
                             <div class="slider-row">
                                 <label for="param8">先形状:</label>
                                 <input type="range" id="param8" name="param8" min="1" max="100" value="20" step="1">
                                 <span id="param8_value">20</span>%                                       
                             </div>
+                        -->   
                         </div>
                     </details>
 
@@ -157,8 +169,8 @@
                             <span class="tax">（税込・送料別）</span>
                         </div>
 
-                        <button id="loadBtn" class="btn">デザインを読み込む</button>
-                        <button id="saveBtn" class="btn">デザインを保存</button>
+                        <!--<button id="loadBtn" class="btn">デザインを読み込む</button>-->
+                        <!--<button id="saveBtn" class="btn">デザインを保存</button>-->
                         <button id="orderBtn" class="btn">注文に進む</button>
 
                         <!-- loadBtn action -->
@@ -188,6 +200,7 @@
                         "three": "https://unpkg.com/three@0.144.0/build/three.module.js",
                         "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.144.0/examples/jsm/controls/OrbitControls.js",
                         "three/examples/jsm/loaders/3DMLoader": "https://unpkg.com/three@0.144.0/examples/jsm/loaders/3DMLoader.js",
+                        "three/examples/jsm/loaders/GLTFLoader": "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js",
                         "rhino3dm":"https://unpkg.com/rhino3dm@8.0.0-beta/rhino3dm.module.js",
                         "rhinocompute": "https://www.unpkg.com/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js"
                     }
