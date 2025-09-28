@@ -61,6 +61,16 @@ const MODEL_DIR = './models/'
 //definition = new Uint8Array(buffer)
 //let rhinoMeshGroup
 
+// 木材の種類とテクスチャファイルの対応マップ
+// ユーザー提供のJPEGファイル名に合わせて、パスを適宜変更してください。
+const WOOD_TEXTURE_MAP = {
+    //'nara': 'textures/nara.jpg',
+    'sakura': 'textures/sakura.jpg'
+    //'keyaki': 'textures/keyaki.jpg',
+    // 他の木材を追加する場合はここに追加
+    // 'kiri': 'textures/kiri.jpg',
+};
+const textureLoader = new THREE.TextureLoader();
 
 
 init()
@@ -186,6 +196,7 @@ function loadModel(url) {
     const loader = new GLTFLoader()
     scene.add(plateContainer)
 
+    /*
     const woodMaterial = new THREE.MeshStandardMaterial({
       // 木の色を設定。ナラ材などの明るい色を想定
       color: 0xcdb28b,     // 例: 明るい茶色/ベージュ（ナラ材に近い）
@@ -196,6 +207,18 @@ function loadModel(url) {
       // オプション: シャープな陰影のための設定
       // flatShading: false, // 滑らかな陰影
     });
+    */
+    const textureLoader = new THREE.TextureLoader()
+    const textureUrl = 'textures/sakura.jpg' 
+    const sakuraTexture = textureLoader.load(textureUrl)
+    const sakuraMaterial = new THREE.MeshStandardMaterial({
+      map: sakuraTexture, // ロードしたテクスチャを適用
+      // 質感の設定（木材の質感を維持）
+      roughness: 0.8,      // 表面のざらつき（木材なので高めに）
+      metalness: 0.1       // 金属感（木材なので低めに）
+    })
+
+    
 
     loader.load(
         url,
@@ -225,7 +248,7 @@ function loadModel(url) {
                 if (child.isMesh) {
                     child.castShadow = true
                     child.receiveShadow = true
-                    child.material = woodMaterial 
+                    child.material = sakuraMaterial 
                 }
             })
 
@@ -263,6 +286,9 @@ function loadModel(url) {
         }
     )
 }
+
+
+
 
 /**
  * Parse response
